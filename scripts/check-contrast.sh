@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Verifies WCAG contrast (text 4.5:1, non-text UI 3:1) for both themes.
-# Run from anywhere:  ./design-system/scripts/check-contrast.sh [--hex]
+# Run from anywhere:  ./scripts/check-contrast.sh [--hex]
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 css="$here/../tokens.css"

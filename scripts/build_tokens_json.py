@@ -3,7 +3,7 @@
 
 tokens.css is the single source of truth; run this after editing it:
 
-  python3 -I design-system/scripts/build_tokens_json.py
+  python3 -I scripts/build_tokens_json.py
 
 Rules
   - `--primitive-*` tokens carry values; every other token is an alias such as

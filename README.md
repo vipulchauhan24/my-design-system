@@ -160,8 +160,8 @@ Compound names stay hyphenated (`font-size`, `font-weight`, `line-height`, `bord
 ## Working on the system
 
 ```bash
-./design-system/scripts/check-contrast.sh          # verify WCAG contrast, both themes (needs python3)
-python3 design-system/scripts/build_tokens_json.py # regenerate tokens.json after editing tokens.css
+./scripts/check-contrast.sh          # verify WCAG contrast, both themes (needs python3)
+python3 scripts/build_tokens_json.py # regenerate tokens.json after editing tokens.css
 ```
 
 Edit `tokens.css` only; regenerate `tokens.json`, re-run the contrast check and commit `contrast-report.txt` with the change. The checker resolves `var()` chains, flags undefined tokens and out-of-gamut colors, and exits non-zero on any contrast failure.
