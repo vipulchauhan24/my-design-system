@@ -1,0 +1,314 @@
+/* ===========================================================================
+   EMBER DESIGN SYSTEM: tailwind-theme.css                          (Tailwind v4)
+
+   Usage, in your app's main stylesheet:
+
+     @import "tailwindcss";
+     @import "@your-scope/ember/tailwind-theme.css";   (or a relative path)
+
+   This file imports tokens.css (the single source of truth) and exposes it as
+   Tailwind utilities. Every utility points at a CSS variable, so the light/dark
+   themes and [data-density] scopes switch with no `dark:` prefixes needed.
+
+   Utility names are deliberately different from the CSS variable names
+   (bg-canvas, not bg-surface) so a theme entry never shadows the variable it
+   reads from.
+
+   Surface ........ bg-canvas  bg-raised  bg-overlay  bg-sunken  bg-hover  bg-selected  bg-inverse  bg-backdrop
+   Text ........... text-fg  text-fg-muted  text-fg-subtle  text-fg-disabled  text-fg-inverse
+   Border ......... border-line  border-line-strong
+   Brand (ember) .. bg-brand  bg-brand-hover  bg-brand-active  bg-brand-subtle
+                    text-on-brand (label on a brand fill)   text-brand-fg (orange TEXT, AA-safe)
+   Secondary ...... bg-tide  bg-tide-hover  bg-tide-active  bg-tide-subtle  text-on-tide  text-tide-fg
+   Status ......... positive (success)  caution (warning)  critical (error)  notice (info)
+                    each: bg-{s}  bg-{s}-subtle  text-{s}-fg  text-on-{s}
+   Shape/depth .... rounded-sm|md|lg|xl|full (tight|control|container|surface|pill)  shadow-low|mid|high|pin-start|pin-end
+   Focus .......... ring-focus / outline-focus, or the `focus-ring` utility
+   Palette ........ ember, ash, tide, moss, gold, crimson, azure, 50-950 (ash also has 0)
+
+   Rule of thumb: always pair bg-brand with text-on-brand. In light mode that is
+   #D14800 with white (4.53:1); in dark mode it is #FF671F with a dark label (6.41:1).
+   Use text-brand-fg (not bg-brand's color) for orange text, so it stays AA on tints.
+   =========================================================================== */
+
+@import "./tokens.css";
+
+/* Dark variant that understands both the explicit toggle and the OS setting.
+   You rarely need `dark:`: semantic utilities already switch themes. */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+}
+
+@theme inline {
+  /* The system owns the palette: drop Tailwind's default colors, keep the keywords.
+     Delete the next line if you want the stock palette alongside. */
+  --color-*: initial;
+  --color-white: #fff;
+  --color-black: #000;
+
+  /* ----- Raw palette ----- */
+  --color-ember-50: var(--primitive-ember-50);
+  --color-ember-100: var(--primitive-ember-100);
+  --color-ember-200: var(--primitive-ember-200);
+  --color-ember-300: var(--primitive-ember-300);
+  --color-ember-400: var(--primitive-ember-400);
+  --color-ember-500: var(--primitive-ember-500);
+  --color-ember-600: var(--primitive-ember-600);
+  --color-ember-700: var(--primitive-ember-700);
+  --color-ember-800: var(--primitive-ember-800);
+  --color-ember-900: var(--primitive-ember-900);
+  --color-ember-950: var(--primitive-ember-950);
+
+  --color-ash-0: var(--primitive-ash-0);
+  --color-ash-50: var(--primitive-ash-50);
+  --color-ash-100: var(--primitive-ash-100);
+  --color-ash-200: var(--primitive-ash-200);
+  --color-ash-300: var(--primitive-ash-300);
+  --color-ash-400: var(--primitive-ash-400);
+  --color-ash-500: var(--primitive-ash-500);
+  --color-ash-600: var(--primitive-ash-600);
+  --color-ash-700: var(--primitive-ash-700);
+  --color-ash-800: var(--primitive-ash-800);
+  --color-ash-900: var(--primitive-ash-900);
+  --color-ash-950: var(--primitive-ash-950);
+
+  --color-tide-50: var(--primitive-tide-50);
+  --color-tide-100: var(--primitive-tide-100);
+  --color-tide-200: var(--primitive-tide-200);
+  --color-tide-300: var(--primitive-tide-300);
+  --color-tide-400: var(--primitive-tide-400);
+  --color-tide-500: var(--primitive-tide-500);
+  --color-tide-600: var(--primitive-tide-600);
+  --color-tide-700: var(--primitive-tide-700);
+  --color-tide-800: var(--primitive-tide-800);
+  --color-tide-900: var(--primitive-tide-900);
+  --color-tide-950: var(--primitive-tide-950);
+
+  --color-moss-50: var(--primitive-moss-50);
+  --color-moss-100: var(--primitive-moss-100);
+  --color-moss-200: var(--primitive-moss-200);
+  --color-moss-300: var(--primitive-moss-300);
+  --color-moss-400: var(--primitive-moss-400);
+  --color-moss-500: var(--primitive-moss-500);
+  --color-moss-600: var(--primitive-moss-600);
+  --color-moss-700: var(--primitive-moss-700);
+  --color-moss-800: var(--primitive-moss-800);
+  --color-moss-900: var(--primitive-moss-900);
+  --color-moss-950: var(--primitive-moss-950);
+
+  --color-gold-50: var(--primitive-gold-50);
+  --color-gold-100: var(--primitive-gold-100);
+  --color-gold-200: var(--primitive-gold-200);
+  --color-gold-300: var(--primitive-gold-300);
+  --color-gold-400: var(--primitive-gold-400);
+  --color-gold-500: var(--primitive-gold-500);
+  --color-gold-600: var(--primitive-gold-600);
+  --color-gold-700: var(--primitive-gold-700);
+  --color-gold-800: var(--primitive-gold-800);
+  --color-gold-900: var(--primitive-gold-900);
+  --color-gold-950: var(--primitive-gold-950);
+
+  --color-crimson-50: var(--primitive-crimson-50);
+  --color-crimson-100: var(--primitive-crimson-100);
+  --color-crimson-200: var(--primitive-crimson-200);
+  --color-crimson-300: var(--primitive-crimson-300);
+  --color-crimson-400: var(--primitive-crimson-400);
+  --color-crimson-500: var(--primitive-crimson-500);
+  --color-crimson-600: var(--primitive-crimson-600);
+  --color-crimson-700: var(--primitive-crimson-700);
+  --color-crimson-800: var(--primitive-crimson-800);
+  --color-crimson-900: var(--primitive-crimson-900);
+  --color-crimson-950: var(--primitive-crimson-950);
+
+  --color-azure-50: var(--primitive-azure-50);
+  --color-azure-100: var(--primitive-azure-100);
+  --color-azure-200: var(--primitive-azure-200);
+  --color-azure-300: var(--primitive-azure-300);
+  --color-azure-400: var(--primitive-azure-400);
+  --color-azure-500: var(--primitive-azure-500);
+  --color-azure-600: var(--primitive-azure-600);
+  --color-azure-700: var(--primitive-azure-700);
+  --color-azure-800: var(--primitive-azure-800);
+  --color-azure-900: var(--primitive-azure-900);
+  --color-azure-950: var(--primitive-azure-950);
+
+  /* ----- Semantic color utilities ----- */
+  --color-canvas: var(--color-surface);
+  --color-raised: var(--color-surface-raised);
+  --color-overlay: var(--color-surface-overlay);
+  --color-sunken: var(--color-surface-sunken);
+  --color-hover: var(--color-surface-hover);
+  --color-selected: var(--color-surface-selected);
+  --color-inverse: var(--color-surface-inverse);
+  --color-backdrop: var(--color-scrim);
+
+  --color-fg: var(--color-text-primary);
+  --color-fg-muted: var(--color-text-secondary);
+  --color-fg-subtle: var(--color-text-muted);
+  --color-fg-disabled: var(--color-text-disabled);
+  --color-fg-inverse: var(--color-text-inverse);
+
+  --color-line: var(--color-border);
+  --color-line-strong: var(--color-border-strong);
+
+  --color-brand: var(--color-primary);
+  --color-brand-hover: var(--color-primary-hover);
+  --color-brand-active: var(--color-primary-active);
+  --color-brand-subtle: var(--color-primary-subtle);
+  --color-brand-fg: var(--color-text-brand);
+  --color-on-brand: var(--color-on-primary);
+  --color-focus: var(--color-focus-ring);
+
+  --color-tide: var(--color-secondary);
+  --color-tide-hover: var(--color-secondary-hover);
+  --color-tide-active: var(--color-secondary-active);
+  --color-tide-subtle: var(--color-secondary-subtle);
+  --color-tide-fg: var(--color-secondary-text);
+  --color-on-tide: var(--color-on-secondary);
+
+  --color-positive: var(--color-success);
+  --color-positive-subtle: var(--color-success-subtle);
+  --color-positive-fg: var(--color-success-text);
+  --color-on-positive: var(--color-on-success);
+  --color-caution: var(--color-warning);
+  --color-caution-subtle: var(--color-warning-subtle);
+  --color-caution-fg: var(--color-warning-text);
+  --color-on-caution: var(--color-on-warning);
+  --color-critical: var(--color-error);
+  --color-critical-hover: var(--color-error-hover);
+  --color-critical-subtle: var(--color-error-subtle);
+  --color-critical-fg: var(--color-error-text);
+  --color-on-critical: var(--color-on-error);
+  --color-notice: var(--color-info);
+  --color-notice-subtle: var(--color-info-subtle);
+  --color-notice-fg: var(--color-info-text);
+  --color-on-notice: var(--color-on-info);
+
+  /* ----- Typography ----- */
+  --font-sans: var(--font-body);
+  --font-display: var(--font-heading);
+  --font-mono: var(--font-code);
+
+  --text-*: initial;
+  --text-xs: var(--primitive-font-size-xs);
+  --text-xs--line-height: var(--primitive-line-height-normal);
+  --text-sm: var(--primitive-font-size-sm);
+  --text-sm--line-height: var(--primitive-line-height-normal);
+  --text-base: var(--primitive-font-size-base);
+  --text-base--line-height: var(--primitive-line-height-normal);
+  --text-lg: var(--primitive-font-size-lg);
+  --text-lg--line-height: var(--primitive-line-height-normal);
+  --text-xl: var(--primitive-font-size-xl);
+  --text-xl--line-height: var(--primitive-line-height-snug);
+  --text-2xl: var(--primitive-font-size-2xl);
+  --text-2xl--line-height: var(--primitive-line-height-snug);
+  --text-3xl: var(--primitive-font-size-3xl);
+  --text-3xl--line-height: var(--primitive-line-height-snug);
+  --text-4xl: var(--primitive-font-size-4xl);
+  --text-4xl--line-height: var(--primitive-line-height-snug);
+  --text-5xl: var(--primitive-font-size-5xl);
+  --text-5xl--line-height: var(--primitive-line-height-tight);
+  --text-6xl: var(--primitive-font-size-6xl);
+  --text-6xl--line-height: var(--primitive-line-height-tight);
+  --text-display-md: var(--primitive-font-size-display-md);
+  --text-display-md--line-height: var(--text-display-line);
+  --text-display-md--letter-spacing: var(--text-display-tracking);
+  --text-display-lg: var(--primitive-font-size-display-lg);
+  --text-display-lg--line-height: var(--text-display-line);
+  --text-display-lg--letter-spacing: var(--text-display-tracking);
+
+  --tracking-*: initial;
+  --tracking-tight: var(--primitive-letter-spacing-tight);
+  --tracking-snug: var(--primitive-letter-spacing-snug);
+  --tracking-normal: var(--primitive-letter-spacing-normal);
+  --tracking-wide: var(--primitive-letter-spacing-wide);
+  --tracking-caps: var(--primitive-letter-spacing-caps);
+
+  --leading-*: initial;
+  --leading-none: var(--primitive-line-height-none);
+  --leading-tight: var(--primitive-line-height-tight);
+  --leading-snug: var(--primitive-line-height-snug);
+  --leading-normal: var(--primitive-line-height-normal);
+  --leading-relaxed: var(--primitive-line-height-relaxed);
+
+  /* ----- Shape, elevation ----- */
+  /* Radius roles: rounded-sm = tight, md = control, lg = container, xl = surface.
+     Shadows: shadow-low = raised, shadow-mid = popover, shadow-high = overlay. */
+  --radius-*: initial;
+  --radius-none: var(--primitive-radius-none);
+  --radius-sm: var(--primitive-radius-sm);
+  --radius-md: var(--primitive-radius-md);
+  --radius-lg: var(--primitive-radius-lg);
+  --radius-xl: var(--primitive-radius-xl);
+  --radius-full: var(--primitive-radius-full);
+
+  --shadow-*: initial;
+  --shadow-low: var(--shadow-raised);
+  --shadow-mid: var(--shadow-popover);
+  --shadow-high: var(--shadow-overlay);
+  --shadow-pin-start: var(--shadow-pinned-start);
+  --shadow-pin-end: var(--shadow-pinned-end);
+
+  /* ----- Sizes: h-control-md, min-h-touch, h-row, py-section, px-gutter ----- */
+  --spacing-control-sm: var(--size-control-sm);
+  --spacing-control-md: var(--size-control-md);
+  --spacing-control-lg: var(--size-control-lg);
+  --spacing-touch: var(--size-touch-target);
+  --spacing-row: var(--grid-row-height);
+  --spacing-header-row: var(--grid-header-height);
+  --spacing-gutter: var(--space-page-margin);
+  --spacing-section: var(--space-section-gap);
+  --container-content: var(--layout-content-max);
+
+  /* ----- Motion: transitions follow reduced-motion automatically ----- */
+  --default-transition-duration: var(--motion-duration);
+  --default-transition-timing-function: var(--motion-easing);
+  --ease-standard: var(--motion-easing);
+  --ease-enter: var(--motion-easing-enter);
+  --ease-exit: var(--motion-easing-exit);
+}
+
+/* Z-index is not a Tailwind theme namespace. Use the tokens directly:
+   z-(--z-modal)  z-(--z-dropdown)  z-(--z-tooltip)  z-(--z-grid-pinned) */
+
+@layer base {
+  html {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: 100%;
+    line-height: var(--text-body-line);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Visible focus for everything, with zero specificity so components can opt out. */
+  :where(:focus-visible) {
+    outline: var(--focus-ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  ::selection {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+  }
+}
+
+@utility focus-ring {
+  &:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+}
+
+/* Tabular figures for numeric columns and stats. */
+@utility numeric {
+  font-variant-numeric: tabular-nums;
+}

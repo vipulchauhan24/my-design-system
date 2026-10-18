@@ -1,0 +1,26 @@
+{
+  "name": "ember-design-system",
+  "version": "0.1.0",
+  "description": "Design tokens, Tailwind v4 theme and component specs built around #FF671F.",
+  "license": "MIT",
+  "style": "tokens.css",
+  "exports": {
+    "./tokens.css": "./tokens.css",
+    "./tailwind-theme.css": "./tailwind-theme.css",
+    "./tokens.json": "./tokens.json"
+  },
+  "files": [
+    "tokens.css",
+    "tailwind-theme.css",
+    "tokens.json",
+    "components.md",
+    "README.md"
+  ],
+  "scripts": {
+    "check": "./scripts/check-contrast.sh",
+    "build:json": "python3 -I scripts/build_tokens_json.py"
+  },
+  "sideEffects": [
+    "*.css"
+  ]
+}

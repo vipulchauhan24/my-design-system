@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember Design System: Preview</title>
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="./tokens.css">
+<style>
+  /* Preview-only layout. Every value below comes from tokens.css. */
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; background: var(--color-surface); color: var(--color-text-primary); font: var(--font-weight-body) var(--text-body-size)/var(--text-body-line) var(--font-body); }
+  :where(:focus-visible) { outline: var(--focus-ring-width) solid var(--color-focus-ring); outline-offset: var(--focus-ring-offset); }
+  ::selection { background: var(--color-primary); color: var(--color-on-primary); }
+  h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: var(--font-weight-heading); line-height: var(--text-heading-line); letter-spacing: var(--text-heading-tracking); margin: 0; }
+  p { margin: 0; }
+  code { font-family: var(--font-code); font-size: var(--text-code-size); background: var(--color-surface-sunken); padding: 0.1em 0.4em; border-radius: var(--radius-tight); }
+  .wrap { max-width: var(--layout-content-max); margin-inline: auto; padding-inline: var(--space-page-margin); }
+  .skip { position: absolute; left: -999px; } .skip:focus { left: var(--space-md); top: var(--space-md); background: var(--color-surface); padding: var(--space-xs); z-index: var(--z-toast); }
+
+  /* Top bar */
+  .bar { position: sticky; top: 0; z-index: var(--z-sticky); background: var(--color-surface); border-bottom: var(--border-width) solid var(--color-border); }
+  .bar .wrap { display: flex; align-items: center; gap: var(--space-md); min-height: 3.5rem; flex-wrap: wrap; }
+  .brandmark { display: flex; align-items: center; gap: var(--space-xs); font-weight: var(--font-weight-heading); letter-spacing: var(--text-heading-tracking); margin-right: auto; }
+  .brandmark i { width: 1.25rem; height: 1.25rem; border-radius: var(--radius-tight); background: var(--color-primary); display: block; }
+  nav.links { display: flex; gap: var(--space-md); font-size: var(--text-small-size); flex-wrap: wrap; }
+  nav.links a { color: var(--color-text-secondary); text-decoration: none; padding-block: var(--space-xs); }
+  nav.links a:hover { color: var(--color-text-primary); }
+  .switch-group { display: flex; align-items: center; gap: var(--space-xs); font-size: var(--text-small-size); color: var(--color-text-secondary); }
+  select.sel { height: var(--size-control-sm); font: inherit; font-size: var(--text-small-size); color: var(--input-text); background: var(--input-bg); border: var(--border-width) solid var(--input-border); border-radius: var(--input-radius); padding-inline: var(--space-xs); }
+
+  /* Hero */
+  .hero { padding-block: var(--space-section-gap) var(--space-2xl); }
+  .eyebrow { font-size: var(--text-caption-size); text-transform: uppercase; letter-spacing: var(--text-caption-tracking); color: var(--color-text-brand); font-weight: var(--font-weight-emphasis); margin-bottom: var(--space-md); }
+  .display { font-family: var(--font-heading); font-size: var(--text-display-lg-size); line-height: var(--text-display-line); letter-spacing: var(--text-display-tracking); font-weight: var(--font-weight-heading); margin: 0 0 var(--space-lg); max-width: 14ch; }
+  .display em { font-style: normal; background: var(--color-primary); color: var(--color-on-primary); padding-inline: 0.15em; border-radius: var(--radius-tight); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .lead { font-size: var(--text-h5-size); line-height: var(--text-prose-line); color: var(--color-text-secondary); max-width: var(--layout-prose-max); margin-bottom: var(--space-lg); }
+  .row { display: flex; flex-wrap: wrap; gap: var(--space-sm); align-items: center; }
+
+  section.block { padding-block: var(--space-2xl); border-top: var(--border-width) solid var(--color-border); }
+  section.block > h2 { font-size: var(--text-h2-size); margin-bottom: var(--space-xs); }
+  section.block > .sub { color: var(--color-text-secondary); margin-bottom: var(--space-xl); max-width: var(--layout-prose-max); }
+  h3.k { font-size: var(--text-caption-size); text-transform: uppercase; letter-spacing: var(--text-caption-tracking); color: var(--color-text-secondary); margin: var(--space-xl) 0 var(--space-sm); font-weight: var(--font-weight-emphasis); }
+  .grid2 { display: grid; gap: var(--space-lg); grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+
+  /* Palette */
+  .scale { display: grid; grid-template-columns: 5.5rem repeat(12, minmax(0, 1fr)); gap: 2px; align-items: stretch; margin-bottom: 2px; }
+  .scale .nm { font-size: var(--text-small-size); color: var(--color-text-secondary); align-self: center; }
+  .sw { height: 3rem; border-radius: var(--radius-tight); display: flex; align-items: flex-end; padding: 2px 4px; font-size: 0.6rem; font-family: var(--font-code); }
+  .sw.dark-text { color: var(--primitive-ash-950); } .sw.light-text { color: var(--primitive-ash-0); }
+  .sw.empty { background: none; }
+  .scale-head .sw { height: auto; color: var(--color-text-muted); }
+  .scroll-x { overflow-x: auto; } .scroll-x > .inner { min-width: 46rem; }
+  .pair { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-control); font-weight: var(--font-weight-emphasis); }
+  .pair small { font-weight: var(--font-weight-body); font-family: var(--font-code); font-size: var(--text-caption-size); opacity: 0.85; }
+
+  /* Type */
+  .tspec { display: grid; grid-template-columns: 6rem 1fr; gap: var(--space-md); align-items: baseline; padding-block: var(--space-xs); border-bottom: var(--border-width) solid var(--color-border); }
+  .tspec span.l { font-family: var(--font-code); font-size: var(--text-caption-size); color: var(--color-text-secondary); }
+
+  /* Button */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--button-gap); height: var(--button-height-md); min-width: var(--button-height-md); padding-inline: var(--button-padding-x-md); border-radius: var(--button-radius); border: var(--border-width) solid var(--color-transparent); font: var(--button-font-weight) var(--button-font-size-md)/1 var(--font-body); cursor: pointer; text-decoration: none; transition: background-color var(--button-transition-duration) var(--motion-easing), border-color var(--button-transition-duration) var(--motion-easing); position: relative; }
+  .btn.sm { height: var(--button-height-sm); padding-inline: var(--button-padding-x-sm); font-size: var(--button-font-size-sm); }
+  .btn.lg { height: var(--button-height-lg); padding-inline: var(--button-padding-x-lg); font-size: var(--button-font-size-lg); }
+  /* Hit area grows to the 44px target even when the visual box is smaller. */
+  .btn::after { content: ""; position: absolute; inset-inline: 0; top: 50%; height: max(100%, var(--button-hit-min)); transform: translateY(-50%); }
+  .btn.primary { background: var(--button-primary-bg); border-color: var(--button-primary-border); color: var(--button-primary-text); }
+  .btn.primary:hover { background: var(--button-primary-bg-hover); } .btn.primary:active { background: var(--button-primary-bg-active); }
+  .btn.secondary { background: var(--button-secondary-bg); border-color: var(--button-secondary-border); color: var(--button-secondary-text); }
+  .btn.secondary:hover { background: var(--button-secondary-bg-hover); } .btn.secondary:active { background: var(--button-secondary-bg-active); }
+  .btn.ghost { background: var(--button-ghost-bg); color: var(--button-ghost-text); }
+  .btn.ghost:hover { background: var(--button-ghost-bg-hover); } .btn.ghost:active { background: var(--button-ghost-bg-active); }
+  .btn.destructive { background: var(--button-destructive-bg); color: var(--button-destructive-text); }
+  .btn.destructive:hover { background: var(--button-destructive-bg-hover); }
+  .btn.link { background: none; color: var(--button-link-text); text-decoration: underline; text-underline-offset: 0.2em; padding-inline: var(--space-2xs); }
+  .btn[aria-disabled="true"] { opacity: var(--button-disabled-opacity); cursor: not-allowed; pointer-events: none; }
+  .btn[aria-busy="true"] { cursor: progress; }
+  .btn[aria-busy="true"]::before { content: ""; width: 1em; height: 1em; border-radius: 50%; border: var(--border-width-emphasis) solid currentColor; border-right-color: transparent; animation: spin 700ms linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .btn[aria-busy="true"]::before { animation-duration: 3s; } }
+
+  /* Fields */
+  .field { display: grid; gap: var(--space-2xs); }
+  .field label { font-size: var(--text-small-size); font-weight: var(--font-weight-label); color: var(--input-label-text); }
+  .input { height: var(--input-height); width: 100%; padding-inline: var(--input-padding-x); background: var(--input-bg); color: var(--input-text); border: var(--border-width) solid var(--input-border); border-radius: var(--input-radius); font: var(--text-body-size) var(--font-body); }
+  .input::placeholder { color: var(--input-placeholder); }
+  .input:hover { border-color: var(--input-border-hover); }
+  .input:focus-visible { outline: var(--focus-ring-width) solid var(--input-border-focus); outline-offset: 0; border-color: var(--input-border-focus); }
+  .input[aria-invalid="true"] { border-color: var(--input-border-error); }
+  .input:disabled { background: var(--input-bg-disabled); opacity: var(--opacity-disabled); cursor: not-allowed; }
+  .help { font-size: var(--text-small-size); color: var(--input-helper-text); }
+  .err { font-size: var(--text-small-size); color: var(--input-error-text); display: flex; gap: var(--space-2xs); align-items: center; }
+  .check { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: var(--size-touch-target); cursor: pointer; }
+  .check input { appearance: none; margin: 0; width: var(--check-size); height: var(--check-size); border: var(--border-width-emphasis) solid var(--check-border); background: var(--check-bg); border-radius: var(--radius-tight); display: grid; place-content: center; cursor: pointer; }
+  .check input[type="radio"] { border-radius: var(--radius-pill); }
+  .check input:checked { background: var(--check-checked-bg); border-color: var(--check-checked-border); }
+  .check input[type="checkbox"]:checked::after { content: ""; width: 0.3rem; height: 0.6rem; border: solid var(--check-checked-icon); border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
+  .check input[type="radio"]:checked::after { content: ""; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--check-checked-icon); }
+  .toggle { appearance: none; width: 2.75rem; height: 1.5rem; border-radius: var(--radius-pill); background: var(--switch-track-off); border: 0; position: relative; cursor: pointer; padding: 0; transition: background-color var(--motion-duration) var(--motion-easing); }
+  .toggle::after { content: ""; position: absolute; top: 0.1875rem; left: 0.1875rem; width: 1.125rem; height: 1.125rem; border-radius: 50%; background: var(--switch-thumb); transition: transform var(--motion-duration) var(--motion-easing); }
+  .toggle[aria-checked="true"] { background: var(--switch-track-on); } .toggle[aria-checked="true"]::after { transform: translateX(1.25rem); }
+
+  /* Card */
+  .card { background: var(--card-bg); border: var(--border-width) solid var(--card-border); border-radius: var(--card-radius); padding: var(--card-padding); display: grid; gap: var(--card-gap); box-shadow: var(--card-shadow); transition: border-color var(--motion-duration) var(--motion-easing), box-shadow var(--motion-duration) var(--motion-easing); }
+  .card.interactive:hover { border-color: var(--card-border-hover); box-shadow: var(--card-shadow-hover); }
+  .card h3 { font-size: var(--text-h4-size); color: var(--card-title-text); } .card p { color: var(--card-body-text); }
+
+  /* Alert */
+  .alert { display: flex; gap: var(--alert-gap); padding: var(--alert-padding); border-radius: var(--alert-radius); border-inline-start: var(--alert-accent-width) solid var(--accent); background: var(--bg); color: var(--alert-text); }
+  .alert svg { flex: none; width: var(--size-icon-md); height: var(--size-icon-md); color: var(--icon); margin-top: 0.1em; }
+  .alert b { font-weight: var(--alert-title-weight); display: block; }
+  .alert.info { --bg: var(--alert-info-bg); --accent: var(--alert-info-accent); --icon: var(--alert-info-icon); }
+  .alert.success { --bg: var(--alert-success-bg); --accent: var(--alert-success-accent); --icon: var(--alert-success-icon); }
+  .alert.warning { --bg: var(--alert-warning-bg); --accent: var(--alert-warning-accent); --icon: var(--alert-warning-icon); }
+  .alert.error { --bg: var(--alert-error-bg); --accent: var(--alert-error-accent); --icon: var(--alert-error-icon); }
+
+  /* Badge, tabs, tooltip, modal */
+  .badge { display: inline-flex; align-items: center; gap: var(--space-2xs); padding: 0.125rem var(--badge-padding-x); border-radius: var(--badge-radius); font-size: var(--badge-font-size); font-weight: var(--badge-font-weight); background: var(--bg); color: var(--fg); }
+  .badge.neutral { --bg: var(--badge-neutral-bg); --fg: var(--badge-neutral-text); } .badge.brand { --bg: var(--badge-brand-bg); --fg: var(--badge-brand-text); }
+  .badge.secondary { --bg: var(--badge-secondary-bg); --fg: var(--badge-secondary-text); } .badge.success { --bg: var(--badge-success-bg); --fg: var(--badge-success-text); }
+  .badge.warning { --bg: var(--badge-warning-bg); --fg: var(--badge-warning-text); } .badge.error { --bg: var(--badge-error-bg); --fg: var(--badge-error-text); } .badge.info { --bg: var(--badge-info-bg); --fg: var(--badge-info-text); }
+  .tabs { display: flex; gap: var(--space-md); border-bottom: var(--border-width) solid var(--tabs-border); }
+  .tab { background: none; border: 0; font: var(--font-weight-label) var(--text-body-size) var(--font-body); color: var(--tabs-text); padding: var(--space-xs) var(--space-2xs); min-height: var(--size-touch-target); cursor: pointer; border-bottom: var(--tabs-indicator-width) solid transparent; margin-bottom: calc(var(--border-width) * -1); }
+  .tab:hover { color: var(--tabs-text-hover); } .tab[aria-selected="true"] { color: var(--tabs-text-active); border-bottom-color: var(--tabs-indicator); }
+  .tip { position: relative; display: inline-block; }
+  .tip .bubble { position: absolute; bottom: calc(100% + 0.5rem); left: 50%; transform: translateX(-50%); background: var(--tooltip-bg); color: var(--tooltip-text); padding: var(--space-2xs) var(--tooltip-padding-x); border-radius: var(--tooltip-radius); font-size: var(--tooltip-font-size); box-shadow: var(--tooltip-shadow); white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity var(--motion-duration-fast) var(--motion-easing); z-index: var(--tooltip-z); }
+  .tip:hover .bubble, .tip:focus-within .bubble { opacity: 1; }
+  .modal-demo { background: var(--modal-scrim); border-radius: var(--radius-surface); padding: var(--space-xl) var(--space-md); display: grid; place-items: center; }
+  .modal { background: var(--modal-bg); border: var(--border-width) solid var(--modal-border); border-radius: var(--modal-radius); padding: var(--modal-padding); box-shadow: var(--modal-shadow); max-width: var(--primitive-container-md); width: 100%; display: grid; gap: var(--space-md); }
+  .modal .actions { display: flex; justify-content: flex-end; gap: var(--space-xs); flex-wrap: wrap; }
+
+  /* Data grid */
+  .grid-shell { border: var(--border-width) solid var(--grid-border); border-radius: var(--grid-radius); overflow: hidden; background: var(--grid-bg); }
+  .grid-scroll { overflow: auto; max-height: 24rem; }
+  table.dg { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 46rem; font-size: var(--grid-font-size); }
+  .dg th, .dg td { padding-inline: var(--grid-cell-padding-x); text-align: start; white-space: nowrap; border-bottom: var(--border-width) solid var(--grid-row-border); }
+  .dg thead th { position: sticky; top: 0; z-index: var(--grid-z-header); height: var(--grid-header-height); background: var(--grid-header-bg); color: var(--grid-header-text); font-weight: var(--grid-header-weight); }
+  .dg thead th .hd { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); height: 100%; position: relative; }
+  .dg thead th button.sort { all: unset; display: inline-flex; align-items: center; gap: var(--space-2xs); cursor: pointer; padding-block: var(--space-2xs); border-radius: var(--radius-tight); }
+  .dg thead th button.sort:hover { color: var(--grid-header-text-active); } .dg thead th button.sort:focus-visible { outline: var(--grid-cell-focus-ring-width) solid var(--grid-cell-focus-ring); }
+  .dg thead th button.sort svg { width: 0.9em; height: 0.9em; color: var(--grid-sort-icon); } .dg thead th[aria-sort="ascending"] svg, .dg thead th[aria-sort="descending"] svg { color: var(--grid-sort-icon-active); }
+  .dg .rs { position: absolute; inset-block: 0; inset-inline-end: calc(var(--grid-cell-padding-x) * -1); width: var(--grid-resize-hit-width); cursor: col-resize; }
+  .dg .rs::after { content: ""; position: absolute; inset-block: 25%; inset-inline-start: 50%; width: var(--grid-resize-handle-width); background: var(--grid-resize-handle); border-radius: var(--radius-pill); }
+  .dg .rs:hover::after { background: var(--grid-resize-handle-hover); }
+  .dg tbody tr { height: var(--grid-row-height); background: var(--grid-row-bg); color: var(--grid-cell-text); }
+  .dg tbody tr:nth-child(even) { background: var(--grid-row-bg-alt); }
+  .dg tbody tr:hover { background: var(--grid-row-bg-hover); }
+  .dg tbody tr[aria-selected="true"] { background: var(--grid-row-bg-selected); box-shadow: inset var(--alert-accent-width) 0 0 var(--grid-row-selected-accent); }
+  .dg td.num, .dg th.num { text-align: end; font-family: var(--grid-font-numeric); font-variant-numeric: tabular-nums; }
+  .dg td.muted { color: var(--grid-cell-text-muted); }
+  .dg .pin { position: sticky; inset-inline-start: 0; z-index: var(--grid-z-pinned); background: inherit; box-shadow: var(--grid-pinned-shadow-start); }
+  .dg thead .pin { z-index: calc(var(--grid-z-header) + 1); background: var(--grid-header-bg); }
+  .dg tbody .pin { background: var(--grid-pinned-bg); }
+  .dg tbody tr[aria-selected="true"] .pin { background: var(--grid-row-bg-selected); }
+  .dg td:focus-visible { outline: var(--grid-cell-focus-ring-width) solid var(--grid-cell-focus-ring); outline-offset: calc(var(--grid-cell-focus-ring-width) * -1); }
+  .grid-foot { display: flex; justify-content: space-between; align-items: center; padding-inline: var(--grid-cell-padding-x); height: var(--grid-footer-height); background: var(--grid-footer-bg); color: var(--grid-footer-text); font-size: var(--grid-font-size); }
+
+  footer { padding-block: var(--space-2xl); color: var(--color-text-secondary); font-size: var(--text-small-size); border-top: var(--border-width) solid var(--color-border); }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="brandmark"><i aria-hidden="true"></i> Ember</div>
+    <nav class="links" aria-label="Sections">
+      <a href="#color">Color</a><a href="#type">Type</a><a href="#controls">Controls</a><a href="#feedback">Feedback</a><a href="#grid">Data grid</a>
+    </nav>
+    <div class="switch-group">
+      <label for="theme">Theme</label>
+      <select class="sel" id="theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <section class="hero">
+      <p class="eyebrow">Design system v0.1</p>
+      <h1 class="display">Built around <em>orange</em></h1>
+      <p class="lead">One set of tokens for the portfolio, the Tailwind data grid and the UI library. An orange that passes AA on white, warm neutrals, and density you can turn up or down.</p>
+      <div class="row">
+        <a class="btn primary lg" href="#controls">Explore components</a>
+        <a class="btn secondary lg" href="#color">See the palette</a>
+      </div>
+    </section>
+
+    <!-- COLOR -->
+    <section class="block" id="color">
+      <h2>Color</h2>
+      <p class="sub">Seven hues on a 50-950 scale, tuned per hue. Ember 500 (#D14800) is the brand fill in light mode; ember 400 (#FF671F) is the brand on dark. The rest are derived to sit beside them.</p>
+      <div class="scroll-x"><div class="inner" id="scales" role="img" aria-label="Palette scales for ember, ash, tide, moss, gold, crimson and azure"></div></div>
+
+      <h3 class="k">Brand on light and dark: the label flips with the theme</h3>
+      <div class="grid2">
+        <div class="pair" style="background:var(--primitive-ember-500);color:var(--primitive-ash-0)">White on ember-500 (light brand) <small>4.53:1 pass</small></div>
+        <div class="pair" style="background:var(--primitive-ember-400);color:var(--primitive-ash-950)">Ink on #FF671F (dark brand) <small>6.41:1 pass</small></div>
+        <div class="pair" style="background:var(--primitive-ash-0);color:var(--primitive-ember-600);border:var(--border-width) solid var(--color-border)">Ember-600 text on white <small>5.93:1 pass</small></div>
+        <div class="pair" style="background:var(--primitive-ash-950);color:var(--primitive-ember-400)">#FF671F text on ash-950 <small>6.41:1 pass</small></div>
+        <div class="pair" style="background:var(--primitive-ember-400);color:#fff">White on #FF671F <small>2.91:1 fails: never</small></div>
+      </div>
+
+      <h3 class="k">Semantic roles (follow the current theme)</h3>
+      <div class="grid2">
+        <div class="pair" style="background:var(--color-surface);border:var(--border-width) solid var(--color-border)">surface <small>text-primary</small></div>
+        <div class="pair" style="background:var(--color-surface-raised);border:var(--border-width) solid var(--color-border)">surface-raised <small>text-secondary</small></div>
+        <div class="pair" style="background:var(--color-surface-selected);color:var(--color-text-brand)">surface-selected <small>text-brand</small></div>
+        <div class="pair" style="background:var(--color-primary);color:var(--color-on-primary)">primary <small>on-primary</small></div>
+        <div class="pair" style="background:var(--color-secondary);color:var(--color-on-secondary)">secondary <small>on-secondary</small></div>
+        <div class="pair" style="background:var(--color-success);color:var(--color-on-success)">success <small>on-success</small></div>
+        <div class="pair" style="background:var(--color-warning);color:var(--color-on-warning)">warning <small>on-warning</small></div>
+        <div class="pair" style="background:var(--color-error);color:var(--color-on-error)">error <small>on-error</small></div>
+        <div class="pair" style="background:var(--color-info);color:var(--color-on-info)">info <small>on-info</small></div>
+      </div>
+    </section>
+
+    <!-- TYPE -->
+    <section class="block" id="type">
+      <h2>Type</h2>
+      <p class="sub">Inter for UI and prose, JetBrains Mono for code and numbers. A 1.2 ratio from 1rem, plus a fluid display tier for the portfolio.</p>
+      <div>
+        <div class="tspec"><span class="l">display-lg</span><span style="font:var(--font-weight-heading) var(--text-display-lg-size)/var(--text-display-line) var(--font-heading);letter-spacing:var(--text-display-tracking)">Ship it warm</span></div>
+        <div class="tspec"><span class="l">h1 · 2.488rem</span><span style="font:var(--font-weight-heading) var(--text-h1-size)/var(--text-heading-line) var(--font-heading);letter-spacing:var(--text-heading-tracking)">Heading one</span></div>
+        <div class="tspec"><span class="l">h2 · 2.074rem</span><span style="font:var(--font-weight-heading) var(--text-h2-size)/var(--text-heading-line) var(--font-heading)">Heading two</span></div>
+        <div class="tspec"><span class="l">h3 · 1.728rem</span><span style="font:var(--font-weight-heading) var(--text-h3-size)/var(--text-heading-line) var(--font-heading)">Heading three</span></div>
+        <div class="tspec"><span class="l">h4 · 1.44rem</span><span style="font:var(--font-weight-heading) var(--text-h4-size)/var(--text-heading-line) var(--font-heading)">Heading four</span></div>
+        <div class="tspec"><span class="l">body · 1rem</span><span>The quick brown fox jumps over the lazy dog, then files a pull request.</span></div>
+        <div class="tspec"><span class="l">small · 0.833rem</span><span style="font-size:var(--text-small-size)">Labels, grid cells and secondary copy.</span></div>
+        <div class="tspec"><span class="l">caption · 0.694rem</span><span style="font-size:var(--text-caption-size);text-transform:uppercase;letter-spacing:var(--text-caption-tracking)">Overline and caption</span></div>
+        <div class="tspec"><span class="l">code</span><span style="font-family:var(--font-code);font-size:var(--text-code-size)">const brand = "#FF671F"; // 0123456789</span></div>
+      </div>
+    </section>
+
+    <!-- CONTROLS -->
+    <section class="block" id="controls">
+      <h2>Controls</h2>
+      <p class="sub">Every control is at least 40px tall, grows to 44px on touch, and has a visible focus ring. Tab through them.</p>
+
+      <h3 class="k">Button variants</h3>
+      <div class="row">
+        <button class="btn primary">Primary</button><button class="btn secondary">Secondary</button><button class="btn ghost">Ghost</button><button class="btn destructive">Delete</button><button class="btn link">Link</button>
+      </div>
+      <h3 class="k">Sizes, loading, disabled</h3>
+      <div class="row">
+        <button class="btn primary sm">Small</button><button class="btn primary">Medium</button><button class="btn primary lg">Large</button>
+        <button class="btn primary" aria-busy="true" aria-disabled="true">Saving</button>
+        <button class="btn secondary" aria-disabled="true">Disabled</button>
+      </div>
+
+      <h3 class="k">Inputs</h3>
+      <div class="grid2">
+        <div class="field"><label for="i1">Project name</label><input class="input" id="i1" placeholder="my-design-system"><span class="help">Lowercase, with hyphens.</span></div>
+        <div class="field"><label for="i2">Email</label><input class="input" id="i2" value="not-an-email" aria-invalid="true" aria-describedby="i2e"><span class="err" id="i2e"><svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5 18.5 16.5H1.5L10 1.5Zm-1 5v5h2v-5H9Zm0 6.5v2h2v-2H9Z"/></svg>Enter a valid email address.</span></div>
+        <div class="field"><label for="i3">Disabled</label><input class="input" id="i3" value="Read only value" disabled></div>
+      </div>
+
+      <h3 class="k">Checkbox, radio, switch</h3>
+      <div class="row" style="gap:var(--space-lg)">
+        <label class="check"><input type="checkbox" checked> Checked</label>
+        <label class="check"><input type="checkbox"> Unchecked</label>
+        <label class="check"><input type="radio" name="r" checked> Radio on</label>
+        <label class="check"><input type="radio" name="r"> Radio off</label>
+        <label class="check"><button class="toggle" role="switch" aria-checked="true" aria-label="Notifications" id="sw"></button> Notifications</label>
+      </div>
+
+      <h3 class="k">Tabs, badges, tooltip</h3>
+      <div class="tabs" role="tablist" aria-label="Demo">
+        <button class="tab" role="tab" aria-selected="true">Overview</button><button class="tab" role="tab" aria-selected="false">Activity</button><button class="tab" role="tab" aria-selected="false">Settings</button>
+      </div>
+      <div class="row" style="margin-top:var(--space-md)">
+        <span class="badge neutral">Neutral</span><span class="badge brand">Brand</span><span class="badge secondary">Secondary</span>
+        <span class="badge success">✓ Success</span><span class="badge warning">! Warning</span><span class="badge error">✕ Error</span><span class="badge info">i Info</span>
+        <span class="tip"><button class="btn secondary sm" aria-describedby="tp">Hover or focus me</button><span class="bubble" role="tooltip" id="tp">Copy link</span></span>
+      </div>
+
+      <h3 class="k">Cards</h3>
+      <div class="grid2">
+        <article class="card"><span class="badge brand" style="justify-self:start">Open source</span><h3>Grid for Tailwind</h3><p>Sort, filter, pin and resize columns with nothing but utility classes.</p></article>
+        <article class="card interactive" tabindex="0"><span class="badge secondary" style="justify-self:start">Portfolio</span><h3>Interactive card</h3><p>Hover or focus: the border strengthens and a shadow appears.</p></article>
+      </div>
+
+      <h3 class="k">Modal</h3>
+      <div class="modal-demo">
+        <div class="modal" role="dialog" aria-labelledby="mt">
+          <h3 id="mt" style="font-size:var(--text-h4-size)">Delete this project?</h3>
+          <p style="color:var(--color-text-secondary)">This removes the repository link and all analytics. It cannot be undone.</p>
+          <div class="actions"><button class="btn ghost">Cancel</button><button class="btn destructive">Delete project</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEEDBACK -->
+    <section class="block" id="feedback">
+      <h2>Feedback</h2>
+      <p class="sub">Status is always carried by an icon and a title, never by color alone. The orange brand is not used for status, so warning (gold) and error (crimson) stay distinguishable.</p>
+      <div class="grid2">
+        <div class="alert info" role="status"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm-1 4h2v2H9v-2Zm0 4h2v5H9v-5Z"/></svg><div><b>Heads up</b>Dark mode follows your system unless you pick a theme.</div></div>
+        <div class="alert success" role="status"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm-1.2 12.2L5 9.9l1.4-1.4 2.4 2.4 4.8-4.8L15 7.5l-6.2 6.2Z"/></svg><div><b>Published</b>Your changes are live.</div></div>
+        <div class="alert warning" role="status"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5 18.5 16.5H1.5L10 1.5Zm-1 5v5h2v-5H9Zm0 6.5v2h2v-2H9Z"/></svg><div><b>Unsaved changes</b>Leaving this page will discard your edits.</div></div>
+        <div class="alert error" role="alert"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm3.5 11.1-1.4 1.4L10 11.9 7.9 14l-1.4-1.4L8.6 10.5 6.5 8.4l1.4-1.4L10 9.1l2.1-2.1 1.4 1.4-2.1 2.1 2.1 2.1Z"/></svg><div><b>Deploy failed</b>The build exited with code 1. Check the log and retry.</div></div>
+      </div>
+    </section>
+
+    <!-- GRID -->
+    <section class="block" id="grid">
+      <h2>Data grid</h2>
+      <p class="sub">The tokens for the AG Grid-inspired Tailwind table: sticky header, pinned first column, sortable and resizable headers, row selection, numeric columns and three densities. Click a row to select it.</p>
+      <div class="row" style="margin-bottom:var(--space-sm)">
+        <label for="density" class="switch-group">Density</label>
+        <select class="sel" id="density"><option value="compact">Compact · 28px</option><option value="" selected>Default · 36px</option><option value="comfortable">Comfortable · 44px</option></select>
+      </div>
+      <div class="grid-shell" id="gridwrap">
+        <div class="grid-scroll" tabindex="0" role="region" aria-label="Projects table" >
+          <table class="dg" id="dg">
+            <thead><tr>
+              <th class="pin" scope="col" aria-sort="ascending"><div class="hd"><button class="sort">Project<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 3 12 8H4l4-5Z"/></svg></button><span class="rs"></span></div></th>
+              <th scope="col"><div class="hd"><button class="sort">Stack<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 3 12 7H4l4-4Zm0 10L4 9h8l-4 4Z" opacity=".5"/></svg></button><span class="rs"></span></div></th>
+              <th scope="col"><div class="hd"><button class="sort">Status<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 3 12 7H4l4-4Zm0 10L4 9h8l-4 4Z" opacity=".5"/></svg></button><span class="rs"></span></div></th>
+              <th scope="col" class="num"><div class="hd"><button class="sort">Stars<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 3 12 7H4l4-4Zm0 10L4 9h8l-4 4Z" opacity=".5"/></svg></button><span class="rs"></span></div></th>
+              <th scope="col" class="num"><div class="hd"><button class="sort">Downloads<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 3 12 7H4l4-4Zm0 10L4 9h8l-4 4Z" opacity=".5"/></svg></button><span class="rs"></span></div></th>
+              <th scope="col"><div class="hd"><button class="sort">Updated<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 3 12 7H4l4-4Zm0 10L4 9h8l-4 4Z" opacity=".5"/></svg></button></div></th>
+            </tr></thead>
+            <tbody id="dgbody"></tbody>
+          </table>
+        </div>
+        <div class="grid-foot"><span id="count">12 rows</span><span id="sel">0 selected</span></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer><div class="wrap">Ember Design System v0.1.0 · <code>tokens.css</code> is the source of truth. Everything on this page reads from it.</div></footer>
+
+<script>
+(function () {
+  /* Theme: system / light / dark. The attribute wins over the OS preference. */
+  var root = document.documentElement, sel = document.getElementById('theme');
+  try { var saved = localStorage.getItem('ember-theme'); if (saved) { sel.value = saved; apply(saved); } } catch (e) {}
+  function apply(v) { if (v === 'system') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', v); }
+  sel.addEventListener('change', function () { apply(sel.value); try { localStorage.setItem('ember-theme', sel.value); } catch (e) {} });
+
+  /* Palette */
+  var steps = [50,100,200,300,400,500,600,700,800,900,950];
+  var hues = ['ember','ash','tide','moss','gold','crimson','azure'];
+  var hex500 = {};
+  var out = '<div class="scale scale-head"><span></span><span class="sw empty"></span>' + steps.map(function (s) { return '<span class="sw empty" style="align-items:center;justify-content:center">' + s + '</span>'; }).join('') + '</div>';
+  hues.forEach(function (h) {
+    var cells = '<span class="sw empty"></span>';
+    if (h === 'ash') cells = '<span class="sw light-text" style="background:var(--primitive-ash-0);border:1px solid var(--color-border);color:var(--primitive-ash-900)">0</span>';
+    out += '<div class="scale"><span class="nm">' + h + '</span>' + cells + steps.map(function (s) {
+      var dark = (h === 'ash' ? s <= 400 : (h === 'gold' ? s <= 600 : (h === 'ember' ? s <= 400 : s <= 500)));
+      return '<span class="sw ' + (dark ? 'dark-text' : 'light-text') + '" style="background:var(--primitive-' + h + '-' + s + ')">' + (h === 'ember' && s === 400 ? '#FF671F' : (h === 'ember' && s === 500 ? '#D14800' : '')) + '</span>';
+    }).join('') + '</div>';
+  });
+  document.getElementById('scales').innerHTML = out;
+
+  /* Switch + tabs */
+  var sw = document.getElementById('sw');
+  sw.addEventListener('click', function () { sw.setAttribute('aria-checked', sw.getAttribute('aria-checked') === 'true' ? 'false' : 'true'); });
+  document.querySelectorAll('.tab').forEach(function (t) {
+    t.addEventListener('click', function () { document.querySelectorAll('.tab').forEach(function (o) { o.setAttribute('aria-selected', String(o === t)); }); });
+  });
+
+  /* Grid */
+  var rows = [
+    ['ember-ui','React · Tailwind','Active',2840,18420,'2 days ago'],
+    ['tw-grid','Tailwind · TS','Active',1912,9340,'5 days ago'],
+    ['portfolio','Astro · MDX','Active',214,0,'1 week ago'],
+    ['ember-tokens','CSS · DTCG','Beta',96,1280,'2 weeks ago'],
+    ['dotfiles','Shell · Lua','Stable',58,0,'3 weeks ago'],
+    ['cli-kit','Node · TS','Stable',421,5210,'1 month ago'],
+    ['markdown-lab','Rust · WASM','Beta',37,410,'1 month ago'],
+    ['icons','SVG · Figma','Stable',305,7760,'2 months ago'],
+    ['blog-engine','Node · MDX','Archived',12,0,'6 months ago'],
+    ['hotkeys','TS','Stable',188,3120,'6 months ago'],
+    ['color-lab','OKLCH · TS','Beta',73,640,'7 months ago'],
+    ['resume','Typst','Stable',9,0,'8 months ago']
+  ];
+  var badge = { Active: 'success', Beta: 'info', Stable: 'neutral', Archived: 'warning' };
+  var icon = { Active: '●', Beta: '◆', Stable: '■', Archived: '▲' };
+  var tb = document.getElementById('dgbody');
+  tb.innerHTML = rows.map(function (r, i) {
+    return '<tr aria-selected="' + (i === 1) + '"><td class="pin" tabindex="-1"><b style="font-weight:var(--font-weight-emphasis)">' + r[0] + '</b></td><td class="muted">' + r[1] + '</td><td><span class="badge ' + badge[r[2]] + '"><span aria-hidden="true">' + icon[r[2]] + '</span> ' + r[2] + '</span></td><td class="num">' + r[3].toLocaleString('en') + '</td><td class="num">' + r[4].toLocaleString('en') + '</td><td class="muted">' + r[5] + '</td></tr>';
+  }).join('');
+  function count() { document.getElementById('sel').textContent = tb.querySelectorAll('tr[aria-selected="true"]').length + ' selected'; }
+  count();
+  tb.addEventListener('click', function (e) { var tr = e.target.closest('tr'); if (!tr) return; tr.setAttribute('aria-selected', String(tr.getAttribute('aria-selected') !== 'true')); count(); });
+  document.getElementById('density').addEventListener('change', function (e) {
+    var w = document.getElementById('gridwrap'); if (e.target.value) w.setAttribute('data-density', e.target.value); else w.removeAttribute('data-density');
+  });
+})();
+</script>
+</body>
+</html>

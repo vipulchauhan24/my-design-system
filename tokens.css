@@ -1,0 +1,811 @@
+/* ===========================================================================
+   EMBER DESIGN SYSTEM: tokens.css                                   v0.1.0
+   Built around the brand color #FF671F ("ember").
+
+   Three layers, each pointing only at the layer below it:
+     1. PRIMITIVE  --primitive-{category}-{name}   raw values, never used in product code
+     2. SEMANTIC   --color-*, --space-*, --text-*  purpose-based, what apps use
+     3. COMPONENT  --button-*, --grid-*, ...       per-component decisions
+
+   Themes: light is the default. Dark applies via [data-theme="dark"] or the OS
+   preference; [data-theme="light"] opts out of the OS preference.
+
+   Density: <div data-density="compact | comfortable"> rescales rows, cell
+   padding and header height (default is the unmarked middle setting).
+
+   Breakpoints (var() cannot be used inside @media, so they live here):
+     sm 40rem (640px) | md 48rem (768px) | lg 64rem (1024px)
+     xl 80rem (1280px) | 2xl 96rem (1536px)
+
+   Fonts: the system expects Inter and JetBrains Mono. Load them yourself
+   (self-host or @fontsource); the stacks fall back to system fonts.
+
+   Brand: the brand fill is ember-500 (#D14800) in light mode, which is 4.53:1
+   against white, so it passes AA both as a fill carrying white text and as a
+   UI boundary. The original #FF671F (ember-400) is only 2.91:1 on white but
+   6.41:1 on the dark surface, so it is the brand fill in dark mode, carrying a
+   dark label. Always pair a fill with --color-on-primary: it flips with the theme.
+   Orange TEXT uses --color-text-brand (a step darker in light mode, for tints).
+   =========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   1. PRIMITIVES
+   --------------------------------------------------------------------------- */
+:root {
+  /* Color: OKLCH inside the sRGB gamut, 50-950 per hue. Light steps are low
+     chroma tints, 400-600 are the vivid middle, 700+ are the deep text steps. */
+
+  /* Ember: the brand. Step 500 (#D14800) is the brand fill: white on it is 4.53:1. Step 400 is the original vivid #FF671F, the brand fill on dark surfaces and for logos. */
+  --primitive-ember-50: oklch(97.5% 0.012 55);
+  --primitive-ember-100: oklch(94.5% 0.029 54);
+  --primitive-ember-200: oklch(88.5% 0.062 52);
+  --primitive-ember-300: oklch(80% 0.115 48);
+  --primitive-ember-400: #ff671f; /* original brand orange, pinned: oklch(69.8% 0.2 41.5) */
+  --primitive-ember-500: #d14800; /* brand fill, pinned: AA on white (4.53:1) */
+  --primitive-ember-600: oklch(52% 0.161 38.5);
+  --primitive-ember-700: oklch(45% 0.14 37);
+  --primitive-ember-800: oklch(38% 0.116 36);
+  --primitive-ember-900: oklch(32% 0.098 35);
+  --primitive-ember-950: oklch(26% 0.076 35);
+
+  /* Ash: warm neutrals (hue 55, chroma < 0.014) so grays sit comfortably beside orange. */
+  --primitive-ash-0: #ffffff;
+  --primitive-ash-50: oklch(98.5% 0.003 55);
+  --primitive-ash-100: oklch(96.5% 0.005 55);
+  --primitive-ash-200: oklch(92.5% 0.007 55);
+  --primitive-ash-300: oklch(87% 0.009 55);
+  --primitive-ash-400: oklch(72% 0.012 55);
+  --primitive-ash-500: oklch(53.5% 0.013 55);
+  --primitive-ash-600: oklch(46% 0.013 55);
+  --primitive-ash-700: oklch(38% 0.012 55);
+  --primitive-ash-800: oklch(30% 0.011 55);
+  --primitive-ash-900: oklch(23.5% 0.01 55);
+  --primitive-ash-950: oklch(18.5% 0.009 55);
+
+  /* Tide: derived teal secondary (hue 205), the complement of ember. */
+  --primitive-tide-50: oklch(97.5% 0.012 205);
+  --primitive-tide-100: oklch(95% 0.031 205);
+  --primitive-tide-200: oklch(90% 0.071 205);
+  --primitive-tide-300: oklch(84% 0.103 205);
+  --primitive-tide-400: oklch(77% 0.103 205);
+  --primitive-tide-500: oklch(70% 0.096 205);
+  --primitive-tide-600: oklch(62% 0.087 205);
+  --primitive-tide-700: oklch(52% 0.071 205);
+  --primitive-tide-800: oklch(43% 0.055 205);
+  --primitive-tide-900: oklch(35% 0.042 205);
+  --primitive-tide-950: oklch(26% 0.03 205);
+
+  /* Moss: derived success green (hue 148). */
+  --primitive-moss-50: oklch(97.5% 0.019 148);
+  --primitive-moss-100: oklch(95% 0.051 148);
+  --primitive-moss-200: oklch(90% 0.127 148);
+  --primitive-moss-300: oklch(84% 0.175 148);
+  --primitive-moss-400: oklch(77% 0.174 148);
+  --primitive-moss-500: oklch(70% 0.162 148);
+  --primitive-moss-600: oklch(62% 0.147 148);
+  --primitive-moss-700: oklch(52% 0.121 148);
+  --primitive-moss-800: oklch(43% 0.094 148);
+  --primitive-moss-900: oklch(35% 0.072 148);
+  --primitive-moss-950: oklch(26% 0.05 148);
+
+  /* Gold: derived warning yellow (hue 90), kept well away from ember (hue 41). */
+  --primitive-gold-50: oklch(98.5% 0.011 95);
+  --primitive-gold-100: oklch(96.5% 0.034 95);
+  --primitive-gold-200: oklch(93% 0.069 93);
+  --primitive-gold-300: oklch(89% 0.11 92);
+  --primitive-gold-400: oklch(85% 0.136 90);
+  --primitive-gold-500: oklch(80% 0.131 88);
+  --primitive-gold-600: oklch(70% 0.119 82);
+  --primitive-gold-700: oklch(58% 0.098 75);
+  --primitive-gold-800: oklch(48% 0.078 70);
+  --primitive-gold-900: oklch(40% 0.062 68);
+  --primitive-gold-950: oklch(30% 0.045 65);
+
+  /* Crimson: derived error red (hue 15), pushed toward pink to stay distinct from ember. */
+  --primitive-crimson-50: oklch(97.5% 0.006 15);
+  --primitive-crimson-100: oklch(94.5% 0.017 15);
+  --primitive-crimson-200: oklch(89% 0.04 15);
+  --primitive-crimson-300: oklch(82% 0.073 15);
+  --primitive-crimson-400: oklch(73% 0.131 15);
+  --primitive-crimson-500: oklch(64% 0.2 15);
+  --primitive-crimson-600: oklch(56% 0.184 15);
+  --primitive-crimson-700: oklch(49% 0.157 15);
+  --primitive-crimson-800: oklch(42% 0.127 15);
+  --primitive-crimson-900: oklch(35% 0.099 15);
+  --primitive-crimson-950: oklch(26% 0.069 15);
+
+  /* Azure: derived info blue (hue 255). */
+  --primitive-azure-50: oklch(97.5% 0.005 255);
+  --primitive-azure-100: oklch(94.5% 0.016 255);
+  --primitive-azure-200: oklch(89.5% 0.035 255);
+  --primitive-azure-300: oklch(83% 0.062 255);
+  --primitive-azure-400: oklch(75% 0.102 255);
+  --primitive-azure-500: oklch(67% 0.142 255);
+  --primitive-azure-600: oklch(58% 0.157 255);
+  --primitive-azure-700: oklch(50% 0.132 255);
+  --primitive-azure-800: oklch(42% 0.105 255);
+  --primitive-azure-900: oklch(35% 0.082 255);
+  --primitive-azure-950: oklch(26% 0.058 255);
+
+  /* Overlay scrims */
+  --primitive-scrim-light: oklch(18.5% 0.009 55 / 0.5);
+  --primitive-scrim-dark: oklch(0% 0 0 / 0.65);
+
+  --primitive-color-transparent: transparent;
+
+  /* Spacing: 4px base (0.25rem). Gaps are deliberate: no 7, 9, 11, 13-15. */
+  --primitive-space-0: 0;
+  --primitive-space-0-5: 0.125rem;
+  --primitive-space-1: 0.25rem;
+  --primitive-space-1-5: 0.375rem;
+  --primitive-space-2: 0.5rem;
+  --primitive-space-3: 0.75rem;
+  --primitive-space-4: 1rem;
+  --primitive-space-5: 1.25rem;
+  --primitive-space-6: 1.5rem;
+  --primitive-space-8: 2rem;
+  --primitive-space-10: 2.5rem;
+  --primitive-space-12: 3rem;
+  --primitive-space-16: 4rem;
+  --primitive-space-20: 5rem;
+  --primitive-space-24: 6rem;
+  --primitive-space-32: 8rem;
+  /* Fluid spacing for page gutters and portfolio sections */
+  --primitive-space-fluid-gutter: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  --primitive-space-fluid-section: clamp(4rem, 2rem + 8vw, 8rem);
+
+  /* Sizes: also a 4px base, used for control and row heights. 2.75rem is the
+     44px touch target. */
+  --primitive-size-4: 1rem;
+  --primitive-size-5: 1.25rem;
+  --primitive-size-6: 1.5rem;
+  --primitive-size-7: 1.75rem;
+  --primitive-size-8: 2rem;
+  --primitive-size-9: 2.25rem;
+  --primitive-size-10: 2.5rem;
+  --primitive-size-11: 2.75rem;
+  --primitive-size-12: 3rem;
+  --primitive-size-14: 3.5rem;
+
+  /* Containers */
+  --primitive-container-xs: 20rem;
+  --primitive-container-sm: 24rem;
+  --primitive-container-md: 32rem;
+  --primitive-container-lg: 48rem;
+  --primitive-container-xl: 64rem;
+  --primitive-container-2xl: 72rem;
+  --primitive-container-prose: 65ch;
+
+  /* Borders */
+  --primitive-border-width-thin: 1px;
+  --primitive-border-width-thick: 2px;
+
+  /* Type: modular scale, ratio 1.2 (minor third) from a 1rem base. */
+  --primitive-font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --primitive-font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+  --primitive-font-size-xs: 0.694rem;
+  --primitive-font-size-sm: 0.833rem;
+  --primitive-font-size-base: 1rem;
+  --primitive-font-size-lg: 1.2rem;
+  --primitive-font-size-xl: 1.44rem;
+  --primitive-font-size-2xl: 1.728rem;
+  --primitive-font-size-3xl: 2.074rem;
+  --primitive-font-size-4xl: 2.488rem;
+  --primitive-font-size-5xl: 2.986rem;
+  --primitive-font-size-6xl: 3.583rem;
+  /* Fluid display tier for the portfolio: a deliberate break from the ratio. */
+  --primitive-font-size-display-md: clamp(2.488rem, 1.7rem + 3.2vw, 4.2rem);
+  --primitive-font-size-display-lg: clamp(2.986rem, 1.6rem + 5.5vw, 6rem);
+  --primitive-font-weight-regular: 400;
+  --primitive-font-weight-medium: 500;
+  --primitive-font-weight-semibold: 600;
+  --primitive-font-weight-bold: 700;
+  --primitive-line-height-none: 1;
+  --primitive-line-height-tight: 1.1;
+  --primitive-line-height-snug: 1.25;
+  --primitive-line-height-normal: 1.5;
+  --primitive-line-height-relaxed: 1.65;
+  --primitive-letter-spacing-tight: -0.02em;
+  --primitive-letter-spacing-snug: -0.01em;
+  --primitive-letter-spacing-normal: 0;
+  --primitive-letter-spacing-wide: 0.02em;
+  --primitive-letter-spacing-caps: 0.08em;
+
+  /* Shape */
+  --primitive-radius-none: 0;
+  --primitive-radius-sm: 0.25rem;
+  --primitive-radius-md: 0.375rem;
+  --primitive-radius-lg: 0.625rem;
+  --primitive-radius-xl: 1rem;
+  --primitive-radius-full: 9999px;
+
+  /* Elevation: warm-tinted shadows for light, plain black for dark. */
+  --primitive-shadow-none: none;
+  --primitive-shadow-xs: 0 1px 2px oklch(18.5% 0.02 55 / 0.06);
+  --primitive-shadow-sm: 0 1px 3px oklch(18.5% 0.02 55 / 0.08), 0 1px 2px oklch(18.5% 0.02 55 / 0.06);
+  --primitive-shadow-md: 0 4px 12px oklch(18.5% 0.02 55 / 0.1);
+  --primitive-shadow-lg: 0 12px 32px oklch(18.5% 0.02 55 / 0.14);
+  --primitive-shadow-pinned-start: 4px 0 8px -4px oklch(18.5% 0.02 55 / 0.14);
+  --primitive-shadow-pinned-end: -4px 0 8px -4px oklch(18.5% 0.02 55 / 0.14);
+  --primitive-shadow-dark-sm: 0 1px 3px oklch(0% 0 0 / 0.5), 0 1px 2px oklch(0% 0 0 / 0.4);
+  --primitive-shadow-dark-md: 0 4px 12px oklch(0% 0 0 / 0.5);
+  --primitive-shadow-dark-lg: 0 12px 32px oklch(0% 0 0 / 0.6);
+  --primitive-shadow-dark-pinned-start: 4px 0 8px -4px oklch(0% 0 0 / 0.5);
+  --primitive-shadow-dark-pinned-end: -4px 0 8px -4px oklch(0% 0 0 / 0.5);
+
+  /* State */
+  --primitive-opacity-disabled: 0.45;
+
+  /* Motion */
+  --primitive-duration-instant: 0ms;
+  --primitive-duration-fast: 100ms;
+  --primitive-duration-base: 200ms;
+  --primitive-duration-slow: 320ms;
+  --primitive-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --primitive-easing-enter: cubic-bezier(0, 0, 0.2, 1);
+  --primitive-easing-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Layering */
+  --primitive-z-grid-cell: 1;
+  --primitive-z-grid-pinned: 2;
+  --primitive-z-grid-header: 3;
+  --primitive-z-dropdown: 1000;
+  --primitive-z-sticky: 1100;
+  --primitive-z-overlay: 1200;
+  --primitive-z-modal: 1300;
+  --primitive-z-toast: 1400;
+  --primitive-z-tooltip: 1500;
+}
+
+/* ---------------------------------------------------------------------------
+   2. SEMANTIC TOKENS (light theme is the default)
+   --------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  /* Surfaces */
+  --color-surface: var(--primitive-ash-0);
+  --color-surface-raised: var(--primitive-ash-50);
+  --color-surface-overlay: var(--primitive-ash-0);
+  --color-surface-sunken: var(--primitive-ash-100);
+  --color-surface-hover: var(--primitive-ash-100);
+  --color-surface-selected: var(--primitive-ember-50);
+  --color-surface-inverse: var(--primitive-ash-900);
+  --color-scrim: var(--primitive-scrim-light);
+  --color-transparent: var(--primitive-color-transparent);
+
+  /* Text */
+  --color-text-primary: var(--primitive-ash-900);
+  --color-text-secondary: var(--primitive-ash-600);
+  --color-text-muted: var(--primitive-ash-500);
+  --color-text-disabled: var(--primitive-ash-400);
+  --color-text-brand: var(--primitive-ember-600);
+  --color-text-inverse: var(--primitive-ash-0);
+
+  /* Borders */
+  --color-border: var(--primitive-ash-200);
+  --color-border-strong: var(--primitive-ash-500);
+
+  /* Brand. Light mode uses the AA-on-white orange with a white label; hover and
+     active go darker. Dark mode (below) switches to the original #FF671F. */
+  --color-primary: var(--primitive-ember-500);
+  --color-primary-hover: var(--primitive-ember-600);
+  --color-primary-active: var(--primitive-ember-700);
+  --color-primary-subtle: var(--primitive-ember-100);
+  --color-on-primary: var(--primitive-ash-0);
+  --color-focus-ring: var(--primitive-ember-600);
+
+  /* Secondary (derived teal) */
+  --color-secondary: var(--primitive-tide-700);
+  --color-secondary-hover: var(--primitive-tide-800);
+  --color-secondary-active: var(--primitive-tide-900);
+  --color-secondary-subtle: var(--primitive-tide-100);
+  --color-secondary-text: var(--primitive-tide-700);
+  --color-on-secondary: var(--primitive-ash-0);
+
+  /* Feedback. {status} is the solid fill, -subtle the tinted background,
+     -text the accessible text/icon color on surface and on -subtle, and on-{status}
+     the label on the fill. Never rely on color alone: add an icon or a word. */
+  --color-success: var(--primitive-moss-700);
+  --color-success-subtle: var(--primitive-moss-100);
+  --color-success-text: var(--primitive-moss-800);
+  --color-on-success: var(--primitive-ash-0);
+  --color-warning: var(--primitive-gold-500);
+  --color-warning-subtle: var(--primitive-gold-100);
+  --color-warning-text: var(--primitive-gold-800);
+  --color-on-warning: var(--primitive-ash-950);
+  --color-error: var(--primitive-crimson-600);
+  --color-error-hover: var(--primitive-crimson-700);
+  --color-error-subtle: var(--primitive-crimson-100);
+  --color-error-text: var(--primitive-crimson-700);
+  --color-on-error: var(--primitive-ash-0);
+  --color-info: var(--primitive-azure-700);
+  --color-info-subtle: var(--primitive-azure-100);
+  --color-info-text: var(--primitive-azure-700);
+  --color-on-info: var(--primitive-ash-0);
+
+  /* Spacing */
+  --space-2xs: var(--primitive-space-1);
+  --space-xs: var(--primitive-space-2);
+  --space-sm: var(--primitive-space-3);
+  --space-md: var(--primitive-space-4);
+  --space-lg: var(--primitive-space-6);
+  --space-xl: var(--primitive-space-8);
+  --space-2xl: var(--primitive-space-12);
+  --space-3xl: var(--primitive-space-16);
+  --space-component-gap: var(--space-sm);
+  --space-stack-gap: var(--space-md);
+  --space-section-gap: var(--primitive-space-fluid-section);
+  --space-page-margin: var(--primitive-space-fluid-gutter);
+
+  /* Sizes. Controls grow to the 44px target on touch (see the media query below). */
+  --size-control-sm: var(--primitive-size-8);
+  --size-control-md: var(--primitive-size-10);
+  --size-control-lg: var(--primitive-size-12);
+  --size-touch-target: var(--primitive-size-11);
+  --size-icon-sm: var(--primitive-size-4);
+  --size-icon-md: var(--primitive-size-5);
+  --layout-content-max: var(--primitive-container-2xl);
+  --layout-prose-max: var(--primitive-container-prose);
+
+  /* Type roles */
+  --font-body: var(--primitive-font-sans);
+  --font-heading: var(--primitive-font-sans);
+  --font-code: var(--primitive-font-mono);
+  --font-weight-body: var(--primitive-font-weight-regular);
+  --font-weight-label: var(--primitive-font-weight-medium);
+  --font-weight-heading: var(--primitive-font-weight-semibold);
+  --font-weight-emphasis: var(--primitive-font-weight-semibold);
+  --text-display-lg-size: var(--primitive-font-size-display-lg);
+  --text-display-md-size: var(--primitive-font-size-display-md);
+  --text-display-line: var(--primitive-line-height-tight);
+  --text-display-tracking: var(--primitive-letter-spacing-tight);
+  --text-h1-size: var(--primitive-font-size-4xl);
+  --text-h2-size: var(--primitive-font-size-3xl);
+  --text-h3-size: var(--primitive-font-size-2xl);
+  --text-h4-size: var(--primitive-font-size-xl);
+  --text-h5-size: var(--primitive-font-size-lg);
+  --text-heading-line: var(--primitive-line-height-snug);
+  --text-heading-tracking: var(--primitive-letter-spacing-snug);
+  --text-body-size: var(--primitive-font-size-base);
+  --text-body-line: var(--primitive-line-height-normal);
+  --text-prose-line: var(--primitive-line-height-relaxed);
+  --text-small-size: var(--primitive-font-size-sm);
+  --text-small-line: var(--primitive-line-height-normal);
+  --text-caption-size: var(--primitive-font-size-xs);
+  --text-caption-line: var(--primitive-line-height-normal);
+  --text-caption-tracking: var(--primitive-letter-spacing-caps);
+  --text-label-size: var(--primitive-font-size-sm);
+  --text-code-size: var(--primitive-font-size-sm);
+
+  /* Shape */
+  --radius-tight: var(--primitive-radius-sm);
+  --radius-control: var(--primitive-radius-md);
+  --radius-container: var(--primitive-radius-lg);
+  --radius-surface: var(--primitive-radius-xl);
+  --radius-pill: var(--primitive-radius-full);
+  --border-width: var(--primitive-border-width-thin);
+  --border-width-emphasis: var(--primitive-border-width-thick);
+
+  /* Elevation */
+  --shadow-none: var(--primitive-shadow-none);
+  --shadow-raised: var(--primitive-shadow-sm);
+  --shadow-popover: var(--primitive-shadow-md);
+  --shadow-overlay: var(--primitive-shadow-lg);
+  --shadow-pinned-start: var(--primitive-shadow-pinned-start);
+  --shadow-pinned-end: var(--primitive-shadow-pinned-end);
+
+  /* Layering */
+  --z-grid-cell: var(--primitive-z-grid-cell);
+  --z-grid-pinned: var(--primitive-z-grid-pinned);
+  --z-grid-header: var(--primitive-z-grid-header);
+  --z-dropdown: var(--primitive-z-dropdown);
+  --z-sticky: var(--primitive-z-sticky);
+  --z-overlay: var(--primitive-z-overlay);
+  --z-modal: var(--primitive-z-modal);
+  --z-toast: var(--primitive-z-toast);
+  --z-tooltip: var(--primitive-z-tooltip);
+
+  /* Motion */
+  --motion-duration-fast: var(--primitive-duration-fast);
+  --motion-duration: var(--primitive-duration-base);
+  --motion-duration-slow: var(--primitive-duration-slow);
+  --motion-easing: var(--primitive-easing-standard);
+  --motion-easing-enter: var(--primitive-easing-enter);
+  --motion-easing-exit: var(--primitive-easing-exit);
+
+  /* State and focus */
+  --opacity-disabled: var(--primitive-opacity-disabled);
+  --focus-ring-width: var(--primitive-border-width-thick);
+  --focus-ring-offset: var(--primitive-space-0-5);
+
+  /* Density (default). Overridden by [data-density] below. */
+  --density-row-height: var(--primitive-size-9);
+  --density-header-height: var(--primitive-size-10);
+  --density-cell-padding-x: var(--primitive-space-3);
+}
+
+/* ---------------------------------------------------------------------------
+   3. DARK THEME: overrides every color and shadow token whose value changes.
+   Declared twice because CSS cannot share a block between the two selectors.
+   The toggle wins: [data-theme="light"] opts out of the OS preference.
+   --------------------------------------------------------------------------- */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Surfaces: elevation is expressed by lightness, not shadow */
+  --color-surface: var(--primitive-ash-950);
+  --color-surface-raised: var(--primitive-ash-900);
+  --color-surface-overlay: var(--primitive-ash-800);
+  --color-surface-sunken: var(--primitive-ash-900);
+  --color-surface-hover: var(--primitive-ash-800);
+  --color-surface-selected: var(--primitive-ember-950);
+  --color-surface-inverse: var(--primitive-ash-50);
+  --color-scrim: var(--primitive-scrim-dark);
+
+  /* Text */
+  --color-text-primary: var(--primitive-ash-50);
+  --color-text-secondary: var(--primitive-ash-300);
+  --color-text-muted: var(--primitive-ash-400);
+  --color-text-disabled: var(--primitive-ash-600);
+  --color-text-brand: var(--primitive-ember-400);
+  --color-text-inverse: var(--primitive-ash-950);
+
+  /* Borders */
+  --color-border: var(--primitive-ash-800);
+  --color-border-strong: var(--primitive-ash-500);
+
+  /* Brand: on dark the original #FF671F (ember-400) is the fill, with a dark
+     label. Hover and active go lighter. */
+  --color-primary: var(--primitive-ember-400);
+  --color-primary-hover: var(--primitive-ember-300);
+  --color-primary-active: var(--primitive-ember-200);
+  --color-primary-subtle: var(--primitive-ember-950);
+  --color-on-primary: var(--primitive-ash-950);
+  --color-focus-ring: var(--primitive-ember-300);
+
+  /* Secondary */
+  --color-secondary: var(--primitive-tide-400);
+  --color-secondary-hover: var(--primitive-tide-300);
+  --color-secondary-active: var(--primitive-tide-200);
+  --color-secondary-subtle: var(--primitive-tide-950);
+  --color-secondary-text: var(--primitive-tide-300);
+  --color-on-secondary: var(--primitive-ash-950);
+
+  /* Feedback */
+  --color-success: var(--primitive-moss-400);
+  --color-success-subtle: var(--primitive-moss-950);
+  --color-success-text: var(--primitive-moss-300);
+  --color-on-success: var(--primitive-ash-950);
+  --color-warning: var(--primitive-gold-400);
+  --color-warning-subtle: var(--primitive-gold-950);
+  --color-warning-text: var(--primitive-gold-300);
+  --color-on-warning: var(--primitive-ash-950);
+  --color-error: var(--primitive-crimson-400);
+  --color-error-hover: var(--primitive-crimson-300);
+  --color-error-subtle: var(--primitive-crimson-950);
+  --color-error-text: var(--primitive-crimson-300);
+  --color-on-error: var(--primitive-ash-950);
+  --color-info: var(--primitive-azure-400);
+  --color-info-subtle: var(--primitive-azure-950);
+  --color-info-text: var(--primitive-azure-300);
+  --color-on-info: var(--primitive-ash-950);
+
+  /* Elevation */
+  --shadow-raised: var(--primitive-shadow-dark-sm);
+  --shadow-popover: var(--primitive-shadow-dark-md);
+  --shadow-overlay: var(--primitive-shadow-dark-lg);
+  --shadow-pinned-start: var(--primitive-shadow-dark-pinned-start);
+  --shadow-pinned-end: var(--primitive-shadow-dark-pinned-end);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    /* Surfaces: elevation is expressed by lightness, not shadow */
+    --color-surface: var(--primitive-ash-950);
+    --color-surface-raised: var(--primitive-ash-900);
+    --color-surface-overlay: var(--primitive-ash-800);
+    --color-surface-sunken: var(--primitive-ash-900);
+    --color-surface-hover: var(--primitive-ash-800);
+    --color-surface-selected: var(--primitive-ember-950);
+    --color-surface-inverse: var(--primitive-ash-50);
+    --color-scrim: var(--primitive-scrim-dark);
+
+    /* Text */
+    --color-text-primary: var(--primitive-ash-50);
+    --color-text-secondary: var(--primitive-ash-300);
+    --color-text-muted: var(--primitive-ash-400);
+    --color-text-disabled: var(--primitive-ash-600);
+    --color-text-brand: var(--primitive-ember-400);
+    --color-text-inverse: var(--primitive-ash-950);
+
+    /* Borders */
+    --color-border: var(--primitive-ash-800);
+    --color-border-strong: var(--primitive-ash-500);
+
+    /* Brand: on dark the original #FF671F (ember-400) is the fill, with a dark
+       label. Hover and active go lighter. */
+    --color-primary: var(--primitive-ember-400);
+    --color-primary-hover: var(--primitive-ember-300);
+    --color-primary-active: var(--primitive-ember-200);
+    --color-primary-subtle: var(--primitive-ember-950);
+    --color-on-primary: var(--primitive-ash-950);
+    --color-focus-ring: var(--primitive-ember-300);
+
+    /* Secondary */
+    --color-secondary: var(--primitive-tide-400);
+    --color-secondary-hover: var(--primitive-tide-300);
+    --color-secondary-active: var(--primitive-tide-200);
+    --color-secondary-subtle: var(--primitive-tide-950);
+    --color-secondary-text: var(--primitive-tide-300);
+    --color-on-secondary: var(--primitive-ash-950);
+
+    /* Feedback */
+    --color-success: var(--primitive-moss-400);
+    --color-success-subtle: var(--primitive-moss-950);
+    --color-success-text: var(--primitive-moss-300);
+    --color-on-success: var(--primitive-ash-950);
+    --color-warning: var(--primitive-gold-400);
+    --color-warning-subtle: var(--primitive-gold-950);
+    --color-warning-text: var(--primitive-gold-300);
+    --color-on-warning: var(--primitive-ash-950);
+    --color-error: var(--primitive-crimson-400);
+    --color-error-hover: var(--primitive-crimson-300);
+    --color-error-subtle: var(--primitive-crimson-950);
+    --color-error-text: var(--primitive-crimson-300);
+    --color-on-error: var(--primitive-ash-950);
+    --color-info: var(--primitive-azure-400);
+    --color-info-subtle: var(--primitive-azure-950);
+    --color-info-text: var(--primitive-azure-300);
+    --color-on-info: var(--primitive-ash-950);
+
+    /* Elevation */
+    --shadow-raised: var(--primitive-shadow-dark-sm);
+    --shadow-popover: var(--primitive-shadow-dark-md);
+    --shadow-overlay: var(--primitive-shadow-dark-lg);
+    --shadow-pinned-start: var(--primitive-shadow-dark-pinned-start);
+    --shadow-pinned-end: var(--primitive-shadow-dark-pinned-end);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   4. DENSITY: rows, header and cell padding. Opt in per subtree.
+   --------------------------------------------------------------------------- */
+[data-density="compact"] {
+  --density-row-height: var(--primitive-size-7);
+  --density-header-height: var(--primitive-size-8);
+  --density-cell-padding-x: var(--primitive-space-2);
+}
+
+[data-density="comfortable"] {
+  --density-row-height: var(--primitive-size-11);
+  --density-header-height: var(--primitive-size-12);
+  --density-cell-padding-x: var(--primitive-space-4);
+}
+
+/* ---------------------------------------------------------------------------
+   5. COMPONENT TOKENS: reference semantic tokens only.
+   Naming: --{component}-{part}-{property}[-{state}]
+   --------------------------------------------------------------------------- */
+:root {
+  /* Button */
+  --button-height-sm: var(--size-control-sm);
+  --button-height-md: var(--size-control-md);
+  --button-height-lg: var(--size-control-lg);
+  --button-hit-min: var(--size-touch-target);
+  --button-radius: var(--radius-control);
+  --button-padding-x-sm: var(--space-sm);
+  --button-padding-x-md: var(--space-md);
+  --button-padding-x-lg: var(--space-lg);
+  --button-gap: var(--space-xs);
+  --button-font-size-sm: var(--text-label-size);
+  --button-font-size-md: var(--text-body-size);
+  --button-font-size-lg: var(--text-body-size);
+  --button-font-weight: var(--font-weight-emphasis);
+  --button-disabled-opacity: var(--opacity-disabled);
+  --button-transition-duration: var(--motion-duration-fast);
+  --button-primary-bg: var(--color-primary);
+  --button-primary-bg-hover: var(--color-primary-hover);
+  --button-primary-bg-active: var(--color-primary-active);
+  --button-primary-border: var(--color-primary);
+  --button-primary-text: var(--color-on-primary);
+  --button-secondary-bg: var(--color-surface);
+  --button-secondary-bg-hover: var(--color-surface-hover);
+  --button-secondary-bg-active: var(--color-border);
+  --button-secondary-border: var(--color-border-strong);
+  --button-secondary-text: var(--color-text-primary);
+  --button-ghost-bg: var(--color-transparent);
+  --button-ghost-bg-hover: var(--color-surface-hover);
+  --button-ghost-bg-active: var(--color-border);
+  --button-ghost-text: var(--color-text-primary);
+  --button-destructive-bg: var(--color-error);
+  --button-destructive-bg-hover: var(--color-error-hover);
+  --button-destructive-text: var(--color-on-error);
+  --button-link-text: var(--color-text-brand);
+
+  /* Input, Select, Textarea */
+  --input-height: var(--size-control-md);
+  --input-radius: var(--radius-control);
+  --input-padding-x: var(--space-sm);
+  --input-font-size: var(--text-body-size);
+  --input-bg: var(--color-surface);
+  --input-bg-disabled: var(--color-surface-sunken);
+  --input-text: var(--color-text-primary);
+  --input-placeholder: var(--color-text-muted);
+  --input-border: var(--color-border-strong);
+  --input-border-hover: var(--color-text-secondary);
+  --input-border-focus: var(--color-focus-ring);
+  --input-border-error: var(--color-error);
+  --input-label-text: var(--color-text-primary);
+  --input-helper-text: var(--color-text-secondary);
+  --input-error-text: var(--color-error-text);
+
+  /* Checkbox, Radio, Switch */
+  --check-size: var(--size-icon-md);
+  --check-border: var(--color-border-strong);
+  --check-bg: var(--color-surface);
+  --check-checked-bg: var(--color-primary);
+  --check-checked-border: var(--color-primary);
+  --check-checked-icon: var(--color-on-primary);
+  --switch-track-off: var(--color-border-strong);
+  --switch-track-on: var(--color-primary);
+  --switch-thumb: var(--color-surface);
+
+  /* Card */
+  --card-bg: var(--color-surface-raised);
+  --card-border: var(--color-border);
+  --card-border-hover: var(--color-border-strong);
+  --card-radius: var(--radius-container);
+  --card-padding: var(--space-lg);
+  --card-gap: var(--space-md);
+  --card-shadow: var(--shadow-none);
+  --card-shadow-hover: var(--shadow-raised);
+  --card-title-text: var(--color-text-primary);
+  --card-body-text: var(--color-text-secondary);
+
+  /* Alert (one set of tokens per status) */
+  --alert-radius: var(--radius-container);
+  --alert-padding: var(--space-md);
+  --alert-gap: var(--space-sm);
+  --alert-accent-width: var(--border-width-emphasis);
+  --alert-title-weight: var(--font-weight-emphasis);
+  --alert-text: var(--color-text-primary);
+  --alert-info-bg: var(--color-info-subtle);
+  --alert-info-accent: var(--color-info);
+  --alert-info-icon: var(--color-info-text);
+  --alert-success-bg: var(--color-success-subtle);
+  --alert-success-accent: var(--color-success);
+  --alert-success-icon: var(--color-success-text);
+  --alert-warning-bg: var(--color-warning-subtle);
+  --alert-warning-accent: var(--color-warning);
+  --alert-warning-icon: var(--color-warning-text);
+  --alert-error-bg: var(--color-error-subtle);
+  --alert-error-accent: var(--color-error);
+  --alert-error-icon: var(--color-error-text);
+
+  /* Badge */
+  --badge-radius: var(--radius-pill);
+  --badge-padding-x: var(--space-xs);
+  --badge-font-size: var(--text-caption-size);
+  --badge-font-weight: var(--font-weight-emphasis);
+  --badge-neutral-bg: var(--color-surface-sunken);
+  --badge-neutral-text: var(--color-text-secondary);
+  --badge-brand-bg: var(--color-primary-subtle);
+  --badge-brand-text: var(--color-text-brand);
+  --badge-secondary-bg: var(--color-secondary-subtle);
+  --badge-secondary-text: var(--color-secondary-text);
+  --badge-success-bg: var(--color-success-subtle);
+  --badge-success-text: var(--color-success-text);
+  --badge-warning-bg: var(--color-warning-subtle);
+  --badge-warning-text: var(--color-warning-text);
+  --badge-error-bg: var(--color-error-subtle);
+  --badge-error-text: var(--color-error-text);
+  --badge-info-bg: var(--color-info-subtle);
+  --badge-info-text: var(--color-info-text);
+
+  /* Tabs */
+  --tabs-border: var(--color-border);
+  --tabs-text: var(--color-text-secondary);
+  --tabs-text-hover: var(--color-text-primary);
+  --tabs-text-active: var(--color-text-primary);
+  --tabs-indicator: var(--color-primary);
+  --tabs-indicator-width: var(--border-width-emphasis);
+
+  /* Tooltip */
+  --tooltip-bg: var(--color-surface-inverse);
+  --tooltip-text: var(--color-text-inverse);
+  --tooltip-radius: var(--radius-control);
+  --tooltip-padding-x: var(--space-xs);
+  --tooltip-font-size: var(--text-small-size);
+  --tooltip-shadow: var(--shadow-popover);
+  --tooltip-z: var(--z-tooltip);
+
+  /* Modal */
+  --modal-bg: var(--color-surface-overlay);
+  --modal-scrim: var(--color-scrim);
+  --modal-radius: var(--radius-surface);
+  --modal-padding: var(--space-lg);
+  --modal-shadow: var(--shadow-overlay);
+  --modal-border: var(--color-border);
+  --modal-z: var(--z-modal);
+
+  /* Data grid */
+  --grid-font-size: var(--text-small-size);
+  --grid-font-numeric: var(--font-code);
+  --grid-bg: var(--color-surface);
+  --grid-border: var(--color-border);
+  --grid-radius: var(--radius-container);
+  --grid-header-bg: var(--color-surface-sunken);
+  --grid-header-bg-hover: var(--color-surface-hover);
+  --grid-header-text: var(--color-text-secondary);
+  --grid-header-text-active: var(--color-text-primary);
+  --grid-header-weight: var(--font-weight-emphasis);
+  --grid-row-bg: var(--color-surface);
+  --grid-row-bg-alt: var(--color-surface-raised);
+  --grid-row-bg-hover: var(--color-surface-hover);
+  --grid-row-bg-selected: var(--color-surface-selected);
+  --grid-row-border: var(--color-border);
+  --grid-row-selected-accent: var(--color-primary);
+  --grid-cell-text: var(--color-text-primary);
+  --grid-cell-text-muted: var(--color-text-secondary);
+  --grid-cell-focus-ring: var(--color-focus-ring);
+  --grid-cell-focus-ring-width: var(--focus-ring-width);
+  --grid-cell-editing-bg: var(--color-surface-overlay);
+  --grid-sort-icon: var(--color-text-muted);
+  --grid-sort-icon-active: var(--color-text-brand);
+  --grid-resize-handle: var(--color-border-strong);
+  --grid-resize-handle-hover: var(--color-primary);
+  --grid-resize-handle-width: var(--border-width-emphasis);
+  --grid-resize-hit-width: var(--space-xs);
+  --grid-pinned-bg: var(--color-surface);
+  --grid-pinned-shadow-start: var(--shadow-pinned-start);
+  --grid-pinned-shadow-end: var(--shadow-pinned-end);
+  --grid-z-cell: var(--z-grid-cell);
+  --grid-z-pinned: var(--z-grid-pinned);
+  --grid-z-header: var(--z-grid-header);
+  --grid-footer-bg: var(--color-surface-sunken);
+  --grid-footer-text: var(--color-text-secondary);
+}
+
+/* Density-dependent grid tokens are declared per density scope. A custom
+   property that reads var() is resolved where it is declared, so these must be
+   re-declared inside every [data-density] subtree to pick up its values. */
+:root,
+[data-density] {
+  --grid-header-height: var(--density-header-height);
+  --grid-row-height: var(--density-row-height);
+  --grid-cell-padding-x: var(--density-cell-padding-x);
+  --grid-footer-height: var(--density-header-height);
+}
+
+/* ---------------------------------------------------------------------------
+   6. ACCESSIBILITY MEDIA QUERIES
+   --------------------------------------------------------------------------- */
+
+/* Touch: controls and grid rows grow to the 44px target. */
+@media (pointer: coarse) {
+  :root,
+  [data-density="compact"] {
+    --size-control-sm: var(--size-touch-target);
+    --size-control-md: var(--size-touch-target);
+    --density-row-height: var(--size-touch-target);
+  }
+}
+
+/* Motion: collapse durations for users who ask for less animation. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-fast: var(--primitive-duration-instant);
+    --motion-duration: var(--primitive-duration-instant);
+    --motion-duration-slow: var(--primitive-duration-instant);
+  }
+}
+
+/* Forced colors (Windows high contrast): use system colors for focus. */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: var(--focus-ring-width) solid Highlight;
+  }
+}
