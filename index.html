@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Systems</title>
+<style>
+  :root { --bg: #fafaf9; --fg: #1c1917; --muted: #57534e; --card: #fff; --border: #e7e5e4; --accent: #c2410c; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #1c1917; --fg: #fafaf9; --muted: #a8a29e; --card: #292524; --border: #44403c; --accent: #fb923c; }
+  }
+  body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); margin: 0; padding: 48px 16px; }
+  main { max-width: 720px; margin: 0 auto; }
+  h1 { margin: 0 0 8px; }
+  p { color: var(--muted); margin: 0 0 32px; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  a.card { display: block; padding: 16px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; color: inherit; text-decoration: none; }
+  a.card:hover, a.card:focus-visible { border-color: var(--accent); }
+  .name { font-weight: 600; color: var(--accent); }
+  .path { color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Design Systems</h1>
+  <p>Select a design system to open its preview.</p>
+  <ul>
+    <li><a class="card" href="Ember/preview.html"><div class="name">Ember Design System: Preview</div><div class="path">Ember/preview.html</div></a></li>
+    <li><a class="card" href="dummy/preview.html"><div class="name">dummy</div><div class="path">dummy/preview.html</div></a></li>
+  </ul>
+</main>
+</body>
+</html>
