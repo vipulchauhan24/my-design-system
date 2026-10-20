@@ -8,7 +8,7 @@ All components read **component tokens** (`--button-*`, `--grid-*`, …) from `t
 
 | Rule | How it is met |
 |---|---|
-| Visible focus | `:focus-visible` shows a `--focus-ring-width` (2px) ring in `--color-focus-ring`, offset `--focus-ring-offset`. ≥3:1 on every surface (see `contrast-report.txt`). Tailwind: `focus-ring`. |
+| Visible focus | `:focus-visible` shows a `--focus-ring-width` (2px) ring in `--color-focus-ring`, offset `--focus-ring-offset`. ≥3:1 on every surface (see [`contrast-reports/ember.txt`](../contrast-reports/ember.txt)). Tailwind: `focus-ring`. |
 | Pointer target ≥ 44px | Controls are 32 / 40 / 48px visually. On `(pointer: coarse)` the `sm` and `md` sizes grow to 44px (`--size-touch-target`). On fine pointers, `sm` is 32px (above the 24px WCAG 2.5.8 minimum) and an invisible `::after` extends its hit area to 44px. Grid rows grow to 44px on touch. |
 | Disabled vs loading | Use `aria-disabled="true"` (not the `disabled` attribute) where the element should stay focusable, plus `aria-busy="true"` while loading. Disabled opacity is `--opacity-disabled`. |
 | Not color alone | Status always has an icon or a word. Selected rows have an accent bar, not only a tint. Sort state has an arrow and `aria-sort`. |

@@ -3,7 +3,9 @@
 
 tokens.css is the single source of truth; run this after editing it:
 
-  python3 -I scripts/build_tokens_json.py
+  python3 -I scripts/build_tokens_json.py <design-system-dir>
+
+Reads <design-system-dir>/tokens.css and writes <design-system-dir>/tokens.json.
 
 Rules
   - `--primitive-*` tokens carry values; every other token is an alias such as
@@ -26,7 +28,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check_contrast import parse_color, parse_tokens, to_hex  # noqa: E402
 
-ROOT = Path(__file__).resolve().parent.parent
 HUES = {"ember", "ash", "tide", "moss", "gold", "crimson", "azure"}
 COMPOUND = ["font-size", "font-weight", "line-height", "letter-spacing", "border-width"]
 ALIAS = re.compile(r"^var\(\s*(--[\w-]+)\s*\)$")
@@ -87,7 +88,12 @@ def convert(ptype, value):
 
 
 def main():
-    css = (ROOT / "tokens.css").read_text(encoding="utf-8")
+    if len(sys.argv) != 2:
+        sys.exit("usage: build_tokens_json.py <design-system-dir>")
+    root = Path(sys.argv[1]).resolve()
+    if not (root / "tokens.css").is_file():
+        sys.exit(f"{root / 'tokens.css'} not found")
+    css = (root / "tokens.css").read_text(encoding="utf-8")
     themes = parse_tokens(css)
     light, dark = themes["light"], themes["dark"]
 
@@ -160,10 +166,10 @@ def main():
         put(parts, node)
 
     out = {
-        "$description": "Ember design system tokens (generated from tokens.css; do not edit by hand).",
+        "$description": f"{root.name} design system tokens (generated from tokens.css; do not edit by hand).",
         **tree,
     }
-    (ROOT / "tokens.json").write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (root / "tokens.json").write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"wrote tokens.json ({len(light)} tokens)")
 
 

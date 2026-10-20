@@ -12,7 +12,7 @@ One set of design tokens and component specs for the portfolio, the Tailwind dat
 | `tailwind-theme.css` | Tailwind v4 preset. Imports `tokens.css` and exposes it as utilities (`bg-brand`, `text-fg`, `h-row`, …). |
 | `tokens.json` | W3C DTCG-format export for Figma (Tokens Studio) and Style Dictionary. Generated. |
 | `components.md` | Component specs: Button, Input, Card, Alert and the Data Grid in full; the rest summarized. |
-| `contrast-report.txt` | Verified WCAG contrast output for both themes. |
+| [`../contrast-reports/ember.txt`](../contrast-reports/ember.txt) | Verified WCAG contrast output for both themes. |
 | `preview.html` | Visual reference page. Reads only from `tokens.css`. |
 | `scripts/` | `check-contrast.sh` (verify), `build_tokens_json.py` (regenerate `tokens.json`). |
 
@@ -164,7 +164,7 @@ Compound names stay hyphenated (`font-size`, `font-weight`, `line-height`, `bord
 python3 scripts/build_tokens_json.py # regenerate tokens.json after editing tokens.css
 ```
 
-Edit `tokens.css` only; regenerate `tokens.json`, re-run the contrast check and commit `contrast-report.txt` with the change. The checker resolves `var()` chains, flags undefined tokens and out-of-gamut colors, and exits non-zero on any contrast failure.
+Edit `tokens.css` only; regenerate `tokens.json`, re-run the contrast check and commit `contrast-reports/ember.txt` with the change. The checker resolves `var()` chains, flags undefined tokens and out-of-gamut colors, and exits non-zero on any contrast failure.
 
 ## Versioning
 
